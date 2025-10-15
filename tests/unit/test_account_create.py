@@ -6,7 +6,21 @@ class TestAccount:
         assert account.first_name == "John"
         assert account.last_name == "Doe"
         assert account.balance == 0.0
-        if len(account.pesel) == 11:
-            assert len(account.pesel) == 11
-        else:
-            assert account.pesel == "Invalid"
+        # if len(promo_code) == 0:
+        #     assert promo_code == None
+        # else if promo_code[0:5] != "PROM_":
+        #     assert promo_code == "Invalid"
+        # else:
+        #     assert promo_code[0:5] == "PROM_" and len(promo_code) > 8
+
+    def test_pesel_too_long(self):
+        account = Account("Jane", "Smith", "198421941984149")
+        assert account.pesel == "Invalid"
+    
+    def test_pesel_too_short(self):
+        account = Account("Jane", "Smith", "21313")
+        assert account.pesel == "Invalid"
+    
+    def test_pesel_empty(self):
+        account = Account("Jane", "Smith", "")
+        assert account.pesel == "Invalid"
