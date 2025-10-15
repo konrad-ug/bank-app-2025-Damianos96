@@ -25,16 +25,16 @@ class TestAccount:
         account = Account("Jane", "Smith", "")
         assert account.pesel == "Invalid"
 
-    def test_promo_code_format(self):
-        account = Account("Jane", "Smith", "12345678910", "PRom_ABCDEF")
-        assert account.promo_code == "Invalid"
-
-    def test_promo_code_length(self):
-        account = Account("Jane", "Smith", "12345678910", "PROM_AB")
-        assert account.promo_code == "Invalid"
+    def test_valid_promo_code(self):
+        account = Account("Jane", "Smith", "12345678910", "PROM_ABC")
+        assert account.balance == 50.0
     
-    def test_promo_code_valid(self):
-        account = Account("Jane", "Smith", "12345678910", "PROM_ABCDEF")
-        assert account.promo_code == "PROM_ABCDEF"
-
+    def test_invalid_code_prefix(self):
+        account = Account("Jane", "Smith", "12345678910", "PRxM_ab1")
+        assert account.balance == 0.0
+    
+    def test_invalid_code_suffix(self):
+        account = Account("Jane", "Smith", "12345678910", "PRxM_ab1")
+        assert account.balance == 0.0
+        
     
