@@ -2,7 +2,11 @@ from src.account import Account
 
 class TestAccount:
     def test_account_creation(self):
-        account = Account("John", "Doe")
+        account = Account("John", "Doe", "123456789112")
         assert account.first_name == "John"
         assert account.last_name == "Doe"
-        assert account.balance == 0
+        assert account.balance == 0.0
+        if len(account.pesel) == 11:
+            assert len(account.pesel) == 11
+        else:
+            assert account.pesel == "Invalid"
