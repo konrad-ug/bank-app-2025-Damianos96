@@ -15,7 +15,7 @@ class TestFirmAccount:
         firm_account = FirmAccount("Microsoft", "3231231")
         assert firm_account.nip == "Invalid"
     
-    def test_nip_empty(self):
-        firm_account = FirmAccount("Microsoft", "")
+    def test_nip_none(self):
+        firm_account = FirmAccount("Microsoft", None)
         assert firm_account.nip == "Invalid"
 
