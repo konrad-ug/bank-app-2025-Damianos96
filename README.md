@@ -2,11 +2,11 @@
 # Bank-app
 
 ## Author:
-name:
+name: Damian
 
-surname:
+surname: Zielonka
 
-group:
+group: 4
 
 ## How to start the app
 
