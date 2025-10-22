@@ -39,4 +39,3 @@ class TestAccount:
         account = Account("Jane", "Smith", "12105678910", "PROM_ab1")
         assert account.balance == 0.0
         
-    
