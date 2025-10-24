@@ -19,13 +19,13 @@ class TestTransfersPersonal:
         personal_account.outgoing_transfer(200.0)
         assert personal_account.balance == 100.0
     
-    def test_outgoing_negative_transfer(self):
+    def test_outgoing_transfer_negative(self):
         personal_account = PersonalAccount("John", "Doe", "12345678901")
         personal_account.balance = 100.0
         personal_account.outgoing_transfer(-50.0)
         assert personal_account.balance == 100.0
     
-    def test_incoming_negative_transfer(self):
+    def test_incoming_transfer_negative(self):
         personal_account = PersonalAccount("John", "Doe", "12345678901")
         personal_account.balance = 100.0
         personal_account.incoming_transfer(-50.0)
@@ -49,13 +49,13 @@ class TestTransfersFirm:
         company_account.outgoing_transfer(200.0)
         assert company_account.balance == 100.0
     
-    def test_outgoing_negative_transfer(self):
+    def test_outgoing_transfer_negative(self):
         company_account = CompanyAccount("Microsoft", "1231231231")
         company_account.balance = 100.0
         company_account.outgoing_transfer(-50.0)
         assert company_account.balance == 100.0
     
-    def test_incoming_negative_transfer(self):
+    def test_incoming_transfer_negative(self):
         company_account = CompanyAccount("Microsoft", "1231231231")
         company_account.balance = 100.0
         company_account.incoming_transfer(-50.0)
