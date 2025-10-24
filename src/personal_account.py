@@ -1,11 +1,13 @@
-from src.account import Account
+from .account import Account
 
-class PersonalAccount:
+class PersonalAccount(Account):
     def __init__(self, first_name, last_name, pesel, promo_code = None):
+        super().__init__(0.0)
         self.first_name = first_name
         self.last_name = last_name
         self.pesel = pesel if self.is_pesel_valid(pesel)  else "Invalid"
-        self.balance = 50.0 if self.pesel != "Invalid" and self.is_promo_code_valid(promo_code) and self.get_birth_year_from_pesel(pesel) > 1960 else 0.0
+        if self.pesel != "Invalid" and self.is_promo_code_valid(promo_code) and self.get_birth_year_from_pesel(pesel) > 1960:
+            self.balance = 50.0
 
     def is_pesel_valid(self, pesel):
         if pesel and len(pesel) == 11:

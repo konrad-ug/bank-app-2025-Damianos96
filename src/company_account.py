@@ -1,10 +1,10 @@
-from src.account import Account
+from .account import Account
 
-class FirmAccount:
+class CompanyAccount(Account):
     def __init__(self, company_name, nip):
+        super().__init__(0.0)
         self.company_name = company_name
         self.nip = nip if self.is_valid_nip(nip) else "Invalid"
-        self.balance = 0.0
     
     def is_valid_nip(self, nip):
         if nip and len(nip) == 10:
