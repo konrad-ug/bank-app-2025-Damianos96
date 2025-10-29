@@ -21,7 +21,7 @@ class PersonalAccount(Account):
         return False
     
     def get_birth_year_from_pesel(self,pesel):
-        if len(pesel) != 11:
+        if not self.is_pesel_valid(pesel):
             return 0
         YY = int(pesel[0:2])
         MM = int(pesel[2:4])
@@ -30,15 +30,6 @@ class PersonalAccount(Account):
             return base + YY
         elif 21 <= MM <= 32:
             base = 2000
-            return base + YY
-        elif 41 <= MM <= 52:
-            base = 2100
-            return base + YY
-        elif 61 <= MM <= 72:
-            base = 2200
-            return base + YY
-        elif 81 <= MM <= 92:
-            base = 1800
             return base + YY
         else:
             return 0

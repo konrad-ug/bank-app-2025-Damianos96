@@ -38,4 +38,12 @@ class TestPersonalAccount:
     def test_invalid_code_age(self):
         personal_account = PersonalAccount("Jane", "Smith", "12105678910", "PROM_ab1")
         assert personal_account.balance == 0.0
-        
+    
+class TestGetBirthYearFromPesel:
+    def test_get_birth_year_from_pesel_too_short(self):
+        personal_account = PersonalAccount("Jane", "Smith", "12105678910", "PROM_ab1")
+        assert personal_account.get_birth_year_from_pesel("123") == 0
+    
+    def test_get_birth_year_from_pesel_invalid(self):
+        personal_account = PersonalAccount("Jane", "Smith", "12105678910", "PROM_ab1")
+        assert personal_account.get_birth_year_from_pesel("99550112345") == 0
