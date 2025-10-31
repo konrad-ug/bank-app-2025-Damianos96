@@ -89,7 +89,7 @@ class TestCompanyTransferHistory:
         assert company_account.history == [-50.0, -5.0]
     
     def test_express_and_normal_transfer_history(self):
-        company_account = CompanyAccount("Microsoft", "1231231231")
+        company_account = CompanyAccount("Microsoft", "1231231230")
         company_account.balance = 100.0
         company_account.incoming_transfer(500.0)
         company_account.express_transfer(300.0)
