@@ -32,7 +32,7 @@ class TestTransfersPersonal:
         personal_account.express_transfer(0.0)
         assert personal_account.balance == 100.0
 
-class TestTransfersFirm:
+class TestTransfersCompany:
     def test_test_express_transfer_equal(self):
         company_account = CompanyAccount("Microsoft", "1231231231")
         company_account.balance = 100.0

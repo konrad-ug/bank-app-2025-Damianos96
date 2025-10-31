@@ -6,6 +6,7 @@ class TestCompanyAccount:
         assert company_account.company_name == "Microsoft"
         assert company_account.nip == "1231231231"
         assert company_account.balance == 0.0
+        assert company_account.history == []
     
     def test_nip_too_long(self):
         company_account = CompanyAccount("Microsoft", "32231231231231")

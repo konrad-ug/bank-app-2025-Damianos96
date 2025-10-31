@@ -6,6 +6,7 @@ class TestPersonalAccount:
         assert personal_account.first_name == "John"
         assert personal_account.last_name == "Doe"
         assert personal_account.balance == 0.0
+        assert personal_account.history == []
 
     def test_pesel_too_long(self):
         personal_account = PersonalAccount("Jane", "Smith", "198421941984149")
