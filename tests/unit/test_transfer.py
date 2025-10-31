@@ -31,7 +31,7 @@ class TestTransfersPersonal:
         personal_account.incoming_transfer(-50.0)
         assert personal_account.balance == 100.0
 
-class TestTransfersFirm:
+class TestTransfersCompany:
     def test_incoming_transfer(self):
         company_account = CompanyAccount("Microsoft", "1231231231")
         company_account.incoming_transfer(100.0)
