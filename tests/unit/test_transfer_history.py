@@ -40,6 +40,13 @@ class TestPersonalTransferHistory:
         personal_account.balance = 100.0
         personal_account.express_transfer(50.0)
         assert personal_account.history == [-50.0, -1.0]
+    
+    def test_express_and_normal_transfer_history(self):
+        personal_account = PersonalAccount("John", "Doe", "12345678901")
+        personal_account.balance = 100.0
+        personal_account.incoming_transfer(500.0)
+        personal_account.express_transfer(300.0)
+        assert personal_account.history == [500.0, -300.0, -1.0]
 
 class TestCompanyTransferHistory:
     def test_incoming_transfer_history(self):
@@ -80,3 +87,10 @@ class TestCompanyTransferHistory:
         company_account.balance = 100.0
         company_account.express_transfer(50.0)
         assert company_account.history == [-50.0, -5.0]
+    
+    def test_express_and_normal_transfer_history(self):
+        company_account = CompanyAccount("Microsoft", "1231231231")
+        company_account.balance = 100.0
+        company_account.incoming_transfer(500.0)
+        company_account.express_transfer(300.0)
+        assert company_account.history == [500.0, -300.0, -5.0]
