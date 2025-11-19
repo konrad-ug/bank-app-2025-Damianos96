@@ -11,3 +11,10 @@ class CompanyAccount(Account):
         if nip and len(nip) == 10:
             return True
         return False
+    
+    def take_loan(self, amount):
+        if (self.balance >= 2*amount) and (-1775.0 in self.history):
+            self.balance += amount
+            return True
+        else:
+            return False
