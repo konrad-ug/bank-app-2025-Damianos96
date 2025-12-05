@@ -23,6 +23,14 @@ class TestApiCrud:
         assert response.status_code == 201
         assert response.json()["message"] == "Account created"
 
+    def test_create_account_pesel_already_in_use(self, account_data):
+        response = requests.post(self.url, json=account_data)
+        response2 = requests.post(self.url, json=account_data)
+        assert response.status_code == 201
+        assert response.json()["message"] == "Account created"
+        assert response2.status_code == 409
+        assert response2.json()["message"] == "Account with this pesel already exists"
+
     def test_count(self):
         response = requests.get(f"{self.url}/count")
         assert response.status_code == 200
