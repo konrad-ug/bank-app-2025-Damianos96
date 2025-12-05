@@ -6,9 +6,10 @@ class AccountRegistry:
         self.accounts: List[PersonalAccount] = []
 
     def add_account(self, account):
-        existing_account = self.get_account_by_pesel(account.pesel)
-        if not existing_account:
-            self.accounts.append(account)
+        if self.get_account_by_pesel(account.pesel):
+            return False
+        self.accounts.append(account)
+        return True
 
     def get_account_by_pesel(self, pesel):
         for account in self.accounts:

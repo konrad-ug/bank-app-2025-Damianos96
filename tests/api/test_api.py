@@ -18,10 +18,13 @@ class TestApiCrud:
         yield account_data
         requests.delete(f"{self.url}/{account_data['pesel']}")
 
-    def test_create_account(self, account_data):
+    def test_create_account_valid_and_with_pesel_in_use(self, account_data):
         response = requests.post(self.url, json=account_data)
+        response2 = requests.post(self.url, json=account_data)
         assert response.status_code == 201
         assert response.json()["message"] == "Account created"
+        assert response2.status_code == 409
+        assert response2.json()["message"] == "Account with this pesel already exists"
 
     def test_count(self):
         response = requests.get(f"{self.url}/count")
