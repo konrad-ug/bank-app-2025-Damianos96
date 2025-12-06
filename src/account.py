@@ -7,11 +7,15 @@ class Account:
         if amount > 0:
             self.balance += amount
             self.history.append(amount)
+            return True
+        return False
     
     def outgoing_transfer(self,amount):
         if amount > 0 and self.balance >= amount:
             self.balance -= amount
             self.history.append(-amount)
+            return True
+        return False
     
     def express_transfer(self, amount):
         if amount > 0 and self.balance >= amount:
@@ -19,4 +23,6 @@ class Account:
             self.balance -= amount + fee
             self.history.append(-amount)
             self.history.append(-fee)
+            return True
+        return False
 
