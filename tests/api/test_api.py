@@ -62,3 +62,66 @@ class TestApiCrud:
         assert response.json()["message"] == "Account deleted"
         check = requests.get(f"{self.url}/{pesel}")
         assert check.status_code == 404
+    
+    def test_incoming_transfer(self, created_account):
+        pesel = created_account['pesel']
+        payload = {"amount": 100, "type": "incoming"}
+        response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
+        assert response.status_code == 200
+        check = requests.get(f"{self.url}/{pesel}")
+        assert check.json()["balance"] == 100
+
+    def test_outgoing_transfer_success(self, created_account):
+        pesel = created_account['pesel']
+        requests.post(f"{self.url}/{pesel}/transfer", json={"amount": 200, "type": "incoming"})
+        payload = {"amount": 100, "type": "outgoing"}
+        response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
+        assert response.status_code == 200
+        check = requests.get(f"{self.url}/{pesel}")
+        assert check.json()["balance"] == 100
+
+    def test_outgoing_transfer_fail(self, created_account):
+        pesel = created_account['pesel']
+        payload = {"amount": 100, "type": "outgoing"}
+        response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
+        assert response.status_code == 422
+        check = requests.get(f"{self.url}/{pesel}")
+        assert check.json()["balance"] == 0
+
+    def test_transfer_unknown_type(self, created_account):
+        pesel = created_account['pesel']
+        payload = {"amount": 100, "type": "crypto"}        
+        response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
+        assert response.status_code == 400
+
+    def test_express_transfer(self, created_account):
+        pesel = created_account['pesel']
+        requests.post(f"{self.url}/{pesel}/transfer", json={"amount": 100, "type": "incoming"})
+        payload = {"amount": 50, "type": "express"}
+        response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
+        assert response.status_code == 200
+        check = requests.get(f"{self.url}/{pesel}")
+        assert check.json()["balance"] == 49
+
+    def test_express_transfer_insufficient_funds_for_fee_equal_balance(self, created_account):
+        pesel = created_account['pesel']
+        requests.post(f"{self.url}/{pesel}/transfer", json={"amount": 100, "type": "incoming"})
+        payload = {"amount": 100, "type": "express"}
+        response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
+        assert response.status_code == 200
+        check = requests.get(f"{self.url}/{pesel}")
+        assert check.json()["balance"] == -1.0
+
+    def test_express_transfer_insufficient_funds_for_fee(self, created_account):
+        pesel = created_account['pesel']
+        requests.post(f"{self.url}/{pesel}/transfer", json={"amount": 100, "type": "incoming"})
+        payload = {"amount": 200, "type": "express"}
+        response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
+        assert response.status_code == 422
+        check = requests.get(f"{self.url}/{pesel}")
+        assert check.json()["balance"] == 100
+
+    def test_transfer_account_not_found(self):
+        payload = {"amount": 100, "type": "incoming"}
+        response = requests.post(f"{self.url}/00000000000/transfer", json=payload)
+        assert response.status_code == 404
