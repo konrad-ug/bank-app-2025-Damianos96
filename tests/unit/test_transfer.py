@@ -1,6 +1,7 @@
 from src.personal_account import PersonalAccount
 from src.company_account import CompanyAccount
 import pytest
+from unittest.mock import patch
 
 class TestTransfersPersonal:
     @pytest.fixture
@@ -35,8 +36,9 @@ class TestTransfersPersonal:
 class TestTransfersCompany:
     @pytest.fixture
     def company_account(self):
-        company_account = CompanyAccount("Microsoft", "1231231231")
-        return company_account
+        with patch.object(CompanyAccount, '_check_nip_in_gov', return_value=True):
+            company_account = CompanyAccount("Microsoft", "1231231231")
+            return company_account
     
     def test_incoming_transfer(self, company_account):
         company_account.incoming_transfer(100.0)
