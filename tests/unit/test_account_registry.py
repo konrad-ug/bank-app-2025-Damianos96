@@ -21,6 +21,11 @@ class TestAccountRegistry:
         registry.add_account(account)
         retrieved_account = registry.get_account_by_pesel("12345678912")
         assert retrieved_account == account
+
+    def test_add_and_add_the_same_pesel(self, registry: AccountRegistry, account):
+        registry.add_account(account)
+        result = registry.add_account(account)
+        assert result == False
     
     def test_get_account_not_found(self, registry: AccountRegistry):
         retrieved_account = registry.get_account_by_pesel("11111111111")
