@@ -1,4 +1,7 @@
 [run]
-omit = 
+branch = True
+source = src
+omit =
     src/company_account.py
+    src/smtp/smtp_client.py
     tests/*
