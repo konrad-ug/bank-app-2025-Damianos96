@@ -25,31 +25,25 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install flake8 pytest coverage
-          # Tu usunąłem "if", żeby mieć pewność, że requirements.txt istnieje
           pip install -r requirements.txt
 
       - name: Start Flask Server in Background
         run: |
-          # Uruchamiamy serwer, przekierowujemy logi do pliku server.log
-          # Używamy --host=0.0.0.0 dla pewności w środowisku Docker/CI
           nohup python -m flask --app app/api.py run --host=0.0.0.0 --port=5000 > server.log 2>&1 &
 
-          # Czekamy na start serwera
           echo "Waiting for server to start..."
           sleep 5
 
       - name: Check if server is running (Debug)
         run: |
-          # Próbujemy odpytać serwer, żeby sprawdzić czy żyje przed testami
           curl -v http://127.0.0.1:5000/api/accounts/count || echo "Server is NOT responding"
 
       - name: Test with pytest
         run: |
-          # Uruchamiamy testy
           python3 -m coverage run --source=src -m pytest
 
       - name: Show server logs if failed
-        if: always() # Ten krok wykona się nawet jak testy padną
+        if: always()
         run: |
           echo "=== FLASK SERVER LOGS ==="
           cat server.log
