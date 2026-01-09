@@ -23,12 +23,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Start flask
+      - name: Start Flask Server
         run: |
-          export FLASK_APP=app/api.py
-          flask run &
+          nohup python -m flask --app app/api.py run --port=5000 > server.log 2>&1 &
+          echo "Waiting for server to launch..."
           sleep 5
+
+      - name: Check if server is running
+        run: |
+          curl http://127.0.0.1:5000/api/accounts/count || (echo "Server start failed! Logs:" && cat server.log && exit 1)
 
       - name: Execute Performance tests
         run: |
           python3 -m pytest tests/perf
+
+      - name: Print Server Logs on Failure
+        if: failure()
+        run: |
+          echo "=== SERVER LOGS ==="
+          cat server.log
