@@ -1,4 +1,4 @@
-name: Unit tests
+name: Unit and Integration Tests
 
 on:
   push:
@@ -12,6 +12,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +34,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: Start Flask Server in Background
+        env:
+          DB_HOST: localhost
+          DB_PORT: 27017
         run: |
+          # Używamy nohup i przekierowania logów - to jest bardzo dobre rozwiązanie!
           nohup python -m flask --app app/api.py run --host=0.0.0.0 --port=5000 > server.log 2>&1 &
 
           echo "Waiting for server to start..."
@@ -36,14 +46,17 @@ jobs:
 
       - name: Check if server is running (Debug)
         run: |
-          curl -v http://127.0.0.1:5000/api/accounts/count || echo "Server is NOT responding"
+          # Jeśli curl się nie uda, wypisujemy logi i przerywamy workflow (exit 1)
+          # Dzięki temu od razu wiemy, że coś jest nie tak, zamiast czekać na błędy w pytest
+          curl -v http://127.0.0.1:5000/api/accounts/count || (echo "Server start failed! Logs:" && cat server.log && exit 1)
 
       - name: Test with pytest
         run: |
+          # Uruchamiamy wszystkie testy (unit, api, perf) i mierzymy pokrycie kodu
           python3 -m coverage run --source=src -m pytest
 
       - name: Show server logs if failed
-        if: always()
+        if: failure()
         run: |
           echo "=== FLASK SERVER LOGS ==="
           cat server.log
