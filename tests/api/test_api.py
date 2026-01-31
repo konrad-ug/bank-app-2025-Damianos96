@@ -18,6 +18,27 @@ class TestApiCrud:
         yield account_data
         requests.delete(f"{self.url}/{account_data['pesel']}")
 
+    @pytest.fixture
+    def two_accounts(self):
+        acc1 = {
+            "name": "James",
+            "surname": "Hetfield",
+            "pesel": "89092909825"
+        }
+        acc2 = {
+            "name": "Kirk",
+            "surname": "Hammett",
+            "pesel": "77010112345"
+        }
+
+        requests.post(self.url, json=acc1)
+        requests.post(self.url, json=acc2)
+
+        yield
+
+        requests.delete(f"{self.url}/{acc1['pesel']}")
+        requests.delete(f"{self.url}/{acc2['pesel']}")
+
     def test_create_account_valid_and_with_pesel_in_use(self, account_data):
         response = requests.post(self.url, json=account_data)
         response2 = requests.post(self.url, json=account_data)
@@ -26,11 +47,11 @@ class TestApiCrud:
         assert response2.status_code == 409
         assert response2.json()["message"] == "Account with this pesel already exists"
 
-    def test_count(self):
+    def test_count(self, two_accounts):
         response = requests.get(f"{self.url}/count")
         assert response.status_code == 200
         assert response.json()["count"] == 2
-    
+
     def test_get_account_by_pesel(self, created_account):
         pesel = created_account['pesel']
         name = created_account['name']
@@ -45,7 +66,7 @@ class TestApiCrud:
         response = requests.get(f"{self.url}/11111111111")
         assert response.status_code == 404
         assert response.json()["message"] == "Account not found"
-    
+
     def test_update_account(self, created_account):
         pesel = created_account['pesel']
         update_data = {"surname": "Duda"}
@@ -62,7 +83,7 @@ class TestApiCrud:
         assert response.json()["message"] == "Account deleted"
         check = requests.get(f"{self.url}/{pesel}")
         assert check.status_code == 404
-    
+
     def test_incoming_transfer(self, created_account):
         pesel = created_account['pesel']
         payload = {"amount": 100, "type": "incoming"}
@@ -90,7 +111,7 @@ class TestApiCrud:
 
     def test_transfer_unknown_type(self, created_account):
         pesel = created_account['pesel']
-        payload = {"amount": 100, "type": "crypto"}        
+        payload = {"amount": 100, "type": "crypto"}
         response = requests.post(f"{self.url}/{pesel}/transfer", json=payload)
         assert response.status_code == 400
 
