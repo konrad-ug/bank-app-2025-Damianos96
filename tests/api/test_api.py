@@ -29,7 +29,7 @@ class TestApiCrud:
     def test_count(self):
         response = requests.get(f"{self.url}/count")
         assert response.status_code == 200
-        assert response.json()["count"] == 1
+        assert response.json()["count"] == 2
     
     def test_get_account_by_pesel(self, created_account):
         pesel = created_account['pesel']
